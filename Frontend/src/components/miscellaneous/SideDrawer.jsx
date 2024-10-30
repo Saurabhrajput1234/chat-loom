@@ -30,9 +30,8 @@ import axios from "axios";
 import ChatLoading from "../ChatLoading";
 import UserListItem from "../UserAvatar/UserListItem";
 import { getSender } from "../../config/chatLogic";
-import { Effect } from "react-notification-badge";
-import {} from "react-notification-badge";
-import NotificationBadge from "react-notification-badge/lib/components/NotificationBadge";
+import Lottie from "lottie-react";
+import notificationAnimation from "../../animations/notification.json"; // Update path if needed
 
 const SideDrawer = () => {
   const [search, setSearch] = useState("");
@@ -56,15 +55,17 @@ const SideDrawer = () => {
     localStorage.removeItem("userInfo");
     history("/");
   };
+
   const handleSearch = async () => {
     if (!search) {
       toast({
-        title: "Please Enter Something in Search !",
+        title: "Please Enter Something in Search!",
         status: "warning",
         duration: 5000,
         isClosable: true,
         position: "top-left",
       });
+      return;
     }
     try {
       setLoading(true);
@@ -78,15 +79,17 @@ const SideDrawer = () => {
       setSearchResult(data);
     } catch (error) {
       toast({
-        title: "Error Occured !",
-        description: "Failed to load search result",
+        title: "Error Occurred!",
+        description: "Failed to load search results",
         status: "error",
         duration: 5000,
         isClosable: true,
         position: "bottom-left",
       });
+      setLoading(false);
     }
   };
+
   const accessChat = async (userId) => {
     try {
       setLoadingChat(true);
@@ -110,6 +113,7 @@ const SideDrawer = () => {
         isClosable: true,
         position: "bottom-left",
       });
+      setLoadingChat(false);
     }
   };
 
@@ -124,7 +128,7 @@ const SideDrawer = () => {
         p="5px 10px 5px 10px"
         borderWidth="5px"
       >
-        <Tooltip label="Search Users to Chat " hasArrow placement="bottom-end">
+        <Tooltip label="Search Users to Chat" hasArrow placement="bottom-end">
           <Button variant="ghost" onClick={onOpen}>
             <FontAwesomeIcon icon={faMagnifyingGlass} />
             <Text display={{ base: "none", md: "flex" }} px="4">
@@ -138,11 +142,11 @@ const SideDrawer = () => {
         <div>
           <Menu>
             <MenuButton p={1}>
-              <NotificationBadge
-                count = {notification.length}
-                effect = {Effect.SCALE}
-              />
-              <BellIcon fontSize="2xl" m={1} />
+              {notification.length > 0 ? (
+                <Lottie animationData={notificationAnimation} style={{ height: 24, width: 24 }} loop autoplay />
+              ) : (
+                <BellIcon fontSize="2xl" m={1} />
+              )}
             </MenuButton>
             <MenuList pl={2}>
               {!notification.length && "No New Messages"}
@@ -162,12 +166,7 @@ const SideDrawer = () => {
             </MenuList>
             <Menu>
               <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                <Avatar
-                  size="sm"
-                  cursor="pointer"
-                  name={user.name}
-                  src={user.pic}
-                />
+                <Avatar size="sm" cursor="pointer" name={user.name} src={user.pic} />
               </MenuButton>
               <MenuList>
                 <ProfileModals user={user}>

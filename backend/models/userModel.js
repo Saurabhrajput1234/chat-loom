@@ -8,7 +8,6 @@ const userSchema = mongoose.Schema(
     password: { type: String, required: true },
     pic: {
       type: String,
-      required: true,
       default: "https://freesvg.org/img/abstract-user-flat-4.png",
     },
   },

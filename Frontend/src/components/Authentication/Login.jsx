@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Login = () => {
+
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pshow, setPShow] = useState(false);
@@ -43,7 +45,7 @@ const Login = () => {
         },
       };
       const response = await axios.post(
-        "/api/user/login",
+          `/api/user/login`,
         { email, password },
         config
       );
